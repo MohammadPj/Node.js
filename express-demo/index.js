@@ -32,26 +32,25 @@ app.get("/api/courses", (req, res) => {
 app.get("/api/courses/:id", (req, res) => {
   const course = courses.find((course) => course.id === +req.params.id);
 
-  if (!course)
-    res.status(404).send("The course with the given ID was not found!!! ");
+  if (!course) return res.status(404).send("The course with the given ID was not found!!! ");
+
   res.send(course);
 });
 
 // -----------------------------------------  Post ------------------------------------------------
 
 app.post("/api/courses", async (req, res) => {
-  const { error } = validateCourse(req.body)
+  //  Validate
+  const { error } = validateCourse(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
-
+  //  Create new course
   const course = {
     id: courses.length + 1,
     name: req.body.name,
   };
 
+  //  Add new course
   courses.push(course);
   res.send(course);
 });
@@ -61,19 +60,37 @@ app.post("/api/courses", async (req, res) => {
 app.put("/api/courses/:id", (req, res) => {
   //  Lookup the course
   //  if not exist, return 404
-  const course = courses.find((course) => course.id === +req.params.id);
-  if (!course)
-    res.status(404).send("The course with the given ID was not found!!! ");
+  const course = courses.find((c) => c.id === +req.params.id);
+  if (!course) return res.status(404).send("The course with the given ID was not found!!! ");
 
   //  Validate
   //  if invalid return, 400 bad request
-  const { error } = validateCourse(req.body)
-  if (error) res.status(400).send(error.details[0].message);
+  const { error } = validateCourse(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
   //Update the course
   course.name = req.body.name;
   res.send(course);
 });
+
+// -----------------------------------------  Put ------------------------------------------------
+
+app.delete("/api/courses/:id", (req, res) => {
+  //  Look up the course
+  //  if not existed, 404
+
+  const course = courses.find((c) => c.id === +req.params.id);
+  if (!course) return res.status(404).send("course not found");
+
+  //  Delete
+  const index = courses.findIndex((c) => c.id === +req.params.id);
+  courses.splice(index, 1);
+
+  //  Return the same course
+  res.send(course);
+});
+
+// ------------------------------------------------------------------------------------------------
 
 //PORT
 const port = process.env.PORT || 3000;
