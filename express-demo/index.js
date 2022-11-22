@@ -1,7 +1,7 @@
+const Joi = require("joi")
 const express = require("express")
 
 const app = express();
-
 app.use(express.json())
 
 const courses = [
@@ -26,7 +26,18 @@ app.get("/api/courses/:id", (req, res) => {
   res.send(course)
 })
 
-app.post("/api/courses", (req, res) => {
+app.post("/api/courses", async (req, res) => {
+  const schema = Joi.object({
+    name: Joi.string().min(3).required(),
+  })
+
+  const { error } = schema.validate(req.body);
+
+  if(error) {
+    res.status(400).send(error.details[0].message)
+    return;
+  }
+
   const course = {
     id: courses.length + 1,
     name: req.body.name
