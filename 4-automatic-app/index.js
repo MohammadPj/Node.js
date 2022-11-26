@@ -1,21 +1,24 @@
 const express = require("express");
 const Joi = require("joi");
 const helmet = require("helmet");
-const morgan = require('morgan')
+const morgan = require("morgan");
 
-const log = require("./middleware/logger")
-const authentication = require("./middleware/authentication")
+const log = require("./middleware/logger");
+const authentication = require("./middleware/authentication");
 const Creator = require("./creator");
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(express.static('public'))
-app.use(helmet())
-app.use(morgan('short'))
 
-app.use(log)
-app.use(authentication)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
+app.use(helmet());
+if (app.get("env") === "development") {
+  app.use(morgan("short"));
+}
+
+app.use(log);
+app.use(authentication);
 
 const genres = [
   { id: 1, genre: "horror" },
@@ -25,10 +28,10 @@ const genres = [
 
 const validateGenre = (genre) => {
   const schema = Joi.object({
-    genre: Joi.string().required().min(3)
-  })
-  return schema.validate(genre)
-}
+    genre: Joi.string().required().min(3),
+  });
+  return schema.validate(genre);
+};
 
 const genreAPIs = new Creator(app, genres);
 genreAPIs.run("genres", validateGenre);
