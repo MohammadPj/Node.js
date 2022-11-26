@@ -38,7 +38,6 @@ app.get("/api/courses/:id", (req, res) => {
 });
 
 // -----------------------------------------  Post ------------------------------------------------
-
 app.post("/api/courses", async (req, res) => {
   //  Validate
   const { error } = validateCourse(req.body);
@@ -73,7 +72,7 @@ app.put("/api/courses/:id", (req, res) => {
   res.send(course);
 });
 
-// -----------------------------------------  Put ------------------------------------------------
+// -----------------------------------------  Delete ------------------------------------------------
 
 app.delete("/api/courses/:id", (req, res) => {
   //  Look up the course
