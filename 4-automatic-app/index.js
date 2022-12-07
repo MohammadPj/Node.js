@@ -12,6 +12,11 @@ const Creator = require("./creator");
 
 const app = express();
 
+//  use pg
+app.set('view engine', 'pug')
+//  optional
+app.set('views', './views')  // default
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //key=value&key=value
 app.use(express.static("public"));
@@ -44,6 +49,12 @@ const validateGenre = (genre) => {
   });
   return schema.validate(genre);
 };
+
+// --------------------------- APIs
+
+app.get('/', (req, res) => {
+  res.render('index', {title: "My auto app", message: "hello"})
+})
 
 const genreAPIs = new Creator(app, genres);
 genreAPIs.run("genres", validateGenre);
