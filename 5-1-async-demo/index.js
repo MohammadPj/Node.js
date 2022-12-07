@@ -1,12 +1,27 @@
 console.log("Before");
 
-console.log(getUser("10"));
+getUser("10", (user) => {
+
+  console.log(user)
+  getRepo((repo) => {
+    console.log(repo)
+  })
+})
+
+
 
 console.log("After");
 
-function getUser(id) {
+function getUser(id, callback) {
   setTimeout(() => {
     console.log("Reading a user from database...");
-    return { id: id, username: "moh" };
+    callback({ id: id, username: "moh" })
   }, 2000);
+}
+
+function getRepo(callback) {
+  setTimeout(() => {
+    const repo = ['repo1', 'repo2', 'repo3']
+    callback(repo)
+  }, 2000)
 }
