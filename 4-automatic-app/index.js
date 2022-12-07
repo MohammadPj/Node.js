@@ -3,6 +3,8 @@ const express = require("express");
 const Joi = require("joi");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const startupDebugger = require("debug")("app:startup")
+const dbDebugger = require("debug")("app:db")
 
 const log = require("./middleware/logger");
 const authentication = require("./middleware/authentication");
@@ -21,7 +23,11 @@ console.log("password: ", config.get("mail.password"))
 
 if (app.get("env") === "development") {
   app.use(morgan("short"));
+  startupDebugger("morgan enabled")
 }
+
+// Db work ...
+dbDebugger("connected to database...")
 
 app.use(log);
 app.use(authentication);
