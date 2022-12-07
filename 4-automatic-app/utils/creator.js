@@ -1,6 +1,3 @@
-const express = require("express");
-const { valid } = require("joi");
-
 class Creator {
   constructor(app, items) {
     this.app = app;
@@ -9,11 +6,11 @@ class Creator {
 
   run = (listName, validator) => {
     // -----------------------------------------  Get ------------------------------------------------
-    this.app.get(`/api/${listName}`, (req, res) => {
+    this.app.get(`/`, (req, res) => {
       res.send(this.items);
     });
 
-    this.app.get(`/api/${listName}/:id`, (req, res) => {
+    this.app.get(`/:id`, (req, res) => {
       const item = this.items.find((itm) => itm.id === +req.params.id);
 
       if (!item)
@@ -25,7 +22,7 @@ class Creator {
     });
 
     // -----------------------------------------  Post ------------------------------------------------
-    this.app.post(`/api/${listName}`, async (req, res) => {
+    this.app.post(`/`, async (req, res) => {
       //  Validate
       if (validator) {
         const { error } = validator(req.body);
@@ -46,7 +43,7 @@ class Creator {
 
     // -----------------------------------------  Put ------------------------------------------------
 
-    this.app.put(`/api/${listName}/:id`, (req, res) => {
+    this.app.put(`/:id`, (req, res) => {
       //  Lookup the course
       //  if not exist, return 404
       let item = this.items.find((itm) => itm.id === +req.params.id);
@@ -75,7 +72,7 @@ class Creator {
 
     });// -----------------------------------------  Delete ------------------------------------------------
 
-    this.app.delete(`/api/${listName}/:id`, (req, res) => {
+    this.app.delete(`/:id`, (req, res) => {
       //  Look up the course
       //  if not existed, 404
       const item = this.items.find((itm) => itm.id === +req.params.id);

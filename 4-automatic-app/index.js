@@ -6,9 +6,14 @@ const morgan = require("morgan");
 const startupDebugger = require("debug")("app:startup")
 const dbDebugger = require("debug")("app:db")
 
+//  middlewares
 const log = require("./middleware/logger");
 const authentication = require("./middleware/authentication");
-const Creator = require("./creator");
+const Creator = require("./utils/creator");
+
+//  routes
+const genres = require("./routes/courses")
+const home = require("./routes/home")
 
 const app = express();
 
@@ -22,10 +27,6 @@ app.use(express.urlencoded({ extended: true })); //key=value&key=value
 app.use(express.static("public"));
 app.use(helmet());
 
-console.log("Application name: ", config.get("name"))
-console.log("mail server: ", config.get("mail.host"))
-console.log("password: ", config.get("mail.password"))
-
 if (app.get("env") === "development") {
   app.use(morgan("short"));
   startupDebugger("morgan enabled")
@@ -37,27 +38,10 @@ dbDebugger("connected to database...")
 app.use(log);
 app.use(authentication);
 
-const genres = [
-  { id: 1, genre: "horror" },
-  { id: 2, genre: "comedy" },
-  { id: 3, genre: "action" },
-];
-
-const validateGenre = (genre) => {
-  const schema = Joi.object({
-    genre: Joi.string().required().min(3),
-  });
-  return schema.validate(genre);
-};
-
 // --------------------------- APIs
 
-app.get('/', (req, res) => {
-  res.render('index', {title: "My auto app", message: "hello"})
-})
-
-const genreAPIs = new Creator(app, genres);
-genreAPIs.run("genres", validateGenre);
+app.use("/api/genres", genres)
+app.use("/", home)
 
 const port = process.env.PORT || 3000;
 app.listen(port, (socket) => {
