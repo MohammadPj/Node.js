@@ -1,3 +1,4 @@
+const config = require("config")
 const express = require("express");
 const Joi = require("joi");
 const helmet = require("helmet");
@@ -10,9 +11,14 @@ const Creator = require("./creator");
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); //key=value&key=value
 app.use(express.static("public"));
 app.use(helmet());
+
+console.log("Application name: ", config.get("name"))
+console.log("mail server: ", config.get("mail.host"))
+console.log("password: ", config.get("mail.password"))
+
 if (app.get("env") === "development") {
   app.use(morgan("short"));
 }
