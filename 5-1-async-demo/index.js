@@ -1,7 +1,12 @@
-console.log("Before")
+console.log("Before");
 
-setTimeout( () => {
-  console.log("Reading a user from database...")
-}, 100)
+console.log(getUser("10"));
 
-console.log("After")
+console.log("After");
+
+function getUser(id) {
+  setTimeout(() => {
+    console.log("Reading a user from database...");
+    return { id: id, username: "moh" };
+  }, 2000);
+}
