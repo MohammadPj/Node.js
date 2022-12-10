@@ -1,40 +1,35 @@
 console.log("Before");
 
-const displayUsers = (users) => {
-  console.log("repos", users)
-  getRepo(displayRepos);
-};
-
-const displayRepos = (repos) => {
-  console.log("repos", repos)
-  getCommits(displayCommits);
-};
-
-const displayCommits = (commits) => {
-  console.log("commits", commits);
-};
-
-function getUser(id, callback) {
-  setTimeout(() => {
-    console.log("Reading a user from database...");
-    callback({ id: id, username: "moh" });
-  }, 2000);
+const getUser = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const user = { username: "mohammad" };
+      resolve(user);
+    }, 1000);
+  });
 }
 
-function getRepo(callback) {
-  setTimeout(() => {
-    const repo = ["repo1", "repo2", "repo3"];
-    callback(repo);
-  }, 2000);
+
+function getRepo() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const repo = ["repo1", "repo2", "repo3"];
+      resolve(repo);
+    }, 2000);
+  })
 }
 
-function getCommits(callback) {
-  setTimeout(() => {
-    const commits = [1, 2, 3];
-    callback(commits);
-  }, 2000);
+function getCommits() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const commits = [1, 2, 3];
+      resolve(commits);
+    }, 2000);
+  })
 }
 
-getUser("10",displayUsers);
+getUser.then(res => {
+  console.log("res", res)
+})
 
 console.log("After");
