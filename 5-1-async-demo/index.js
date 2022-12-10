@@ -4,8 +4,8 @@ const getUser = () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const user = { username: "mohammad" };
-      // resolve(user);
-      reject(new Error("Error from database"))
+      resolve(user);
+      // reject(new Error("Error from database"))
     }, 1000);
   });
 };
