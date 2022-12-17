@@ -37,11 +37,15 @@ const getCourses = async () => {
   // and
 
   const courses = await Course
-  //   .find({
-  //   isPublished: true,
-  // })
-    .find()
-    .or([{ author: "Mohammad" }, { isPublished: true }])
+
+    // Starts with nod , i for case-insensitive => /^pattern/i
+    // .find({ name: /^nod/i })
+
+    // End$ With Course => /pattern$/
+    // .find({name: /Course$/})
+
+    // Contains js => /.*pattern.*/
+    .find({name: /.*js.*/i})
     .limit(10)
     .sort({ name: 1 })
     .select({ name: 1, tags: 1 })
