@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 mongoose.set("strictQuery", false);
 mongoose
-  .connect("mongodb://localhost/playground")
+  .connect("mongodb://localhost/exercise")
   .then(() => {
     console.log("connected to mongodb");
   })
@@ -38,11 +38,9 @@ const getCourses = async () => {
   const pageSize = 20
 
   const courses = await Course
-    .find()
-    .skip((pageNumber - 1) * pageSize)
-    .limit(pageSize)
+    .find({isPublished: true})
     .sort({ name: 1 })
-    .count()
+    .select({name: 1, author: 1})
     .then();
   console.log("courses", courses);
 };
