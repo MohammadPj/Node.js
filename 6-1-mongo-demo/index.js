@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+mongoose.set('strictQuery', false)
 mongoose.connect("mongodb://localhost/playground").then(() => {
   console.log("connected to mongodb");
 }).catch(err => {
@@ -15,9 +16,17 @@ const courseSchema = new mongoose.Schema({
 })
 
 const Course = mongoose.model('Course', courseSchema)
-const course = new Course({
-  name: 'Node js Course',
-  author: "Mohammad",
-  tags: ["node", "backend"],
-  isPublished: true
-})
+
+async function createCourse() {
+  const course = new Course({
+    name: 'Angular js Course',
+    author: "Mohammad",
+    tags: ["Angular", "Front end"],
+    isPublished: true
+  })
+
+  const result = await course.save()
+  console.log(result)
+}
+
+createCourse();
