@@ -48,7 +48,7 @@ const getCourses = async () => {
     .find({name: /.*js.*/i})
     .limit(10)
     .sort({ name: 1 })
-    .select({ name: 1, tags: 1 })
+    .count()
     .then();
   console.log("courses", courses);
 };
