@@ -33,20 +33,14 @@ async function createCourse() {
 }
 
 const getCourses = async () => {
-  // or
-  // and
+
+  const pageNumber = 1
+  const pageSize = 20
 
   const courses = await Course
-
-    // Starts with nod , i for case-insensitive => /^pattern/i
-    // .find({ name: /^nod/i })
-
-    // End$ With Course => /pattern$/
-    // .find({name: /Course$/})
-
-    // Contains js => /.*pattern.*/
-    .find({name: /.*js.*/i})
-    .limit(10)
+    .find()
+    .skip((pageNumber - 1) * pageSize)
+    .limit(pageSize)
     .sort({ name: 1 })
     .count()
     .then();
