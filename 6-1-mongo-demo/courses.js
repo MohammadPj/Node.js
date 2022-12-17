@@ -34,9 +34,9 @@ const createCourse = async () => {
 };
 
 const getCourses = async () => {
-  return Course.find({author: {$eq: "Mohammad"}})
-    .sort({name: 1})
-    .select({name: 1, author: 1});
+  return Course.find({isPublished: true, tags: {$in: ["backend", "frontend"]}})
+    .sort('-price')
+    .select('name author price');
 };
 
 const run = async () => {
