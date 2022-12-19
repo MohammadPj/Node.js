@@ -40,32 +40,32 @@ const getCourses = async () => {
 };
 
 const updateCourse = async (id) => {
-  //  Approach: Update first
-  //  Update directly
-  //  Optionally: get the updated document
-  //  use when we haven't any validation
-
-
-  // const result = await Course.update({_id: id}, {
-  //   $set: {author: "Mosh"}
-  // })
-
   const course = await Course.findByIdAndUpdate(
     id,
     {
       $set: { author: "Mosh" },
     },
-    // to give new result
     { new: true }
   );
 
   console.log("course", course);
 };
 
+const removeCourse = async (id) => {
+  // const result = await Course.deleteOne({_id: id})
+  const course = await Course.findByIdAndDelete(id)
+  console.log("course", course)
+};
+
 const run = async () => {
   const courses = await getCourses();
   console.log("courses", courses);
 };
+
+// createCourse().then(r => {})
+
 // run();
 
-updateCourse("639dd47d2515456f93ab2885");
+// updateCourse("639dd47d2515456f93ab2885");
+
+removeCourse("63a01d2d4077161921c7c49f");
