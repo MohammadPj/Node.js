@@ -13,9 +13,21 @@ mongoose
 
 const courseSchema = new mongoose.Schema({
   name: { type: String, minLength: 5, maxLength: 255, required: true },
-  category: {type: String, enum: ['mobile', 'web', 'network'], required: true},
+  category: {
+    type: String,
+    enum: ["mobile", "web", "network"],
+    required: true,
+  },
   author: String,
-  tags: [String],
+  tags: {
+    type: Array,
+    validate: {
+      validator: function (v) {
+        return v && v.length > 0;
+      },
+      message: "A course should have at least one tag"
+    },
+  },
   date: { type: Date, default: new Date() },
   price: {
     type: Number,
@@ -23,7 +35,7 @@ const courseSchema = new mongoose.Schema({
       return this.isPublished;
     },
     min: 10,
-    max: 200
+    max: 200,
   },
   isPublished: Boolean,
 });
@@ -32,11 +44,11 @@ const Course = mongoose.model("course", courseSchema);
 
 const createCourse = async () => {
   const course = new Course({
-    name: "ne",
+    name: "course 3",
     category: "mobile",
     author: "Mohammad",
-    tags: ["Mohammad", "vue"],
-    price: 300,
+    tags: null,
+    price: 120,
     isPublished: true,
   });
 
