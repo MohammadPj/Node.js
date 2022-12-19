@@ -22,10 +22,8 @@ const courseSchema = new mongoose.Schema({
   tags: {
     type: Array,
     validate: {
-      validator: function (v) {
-        return v && v.length > 0;
-      },
-      message: "A course should have at least one tag"
+      validator: () => Promise.resolve(false),
+      message: "A course should have at least one tag",
     },
   },
   date: { type: Date, default: new Date() },
@@ -47,7 +45,7 @@ const createCourse = async () => {
     name: "course 3",
     category: "mobile",
     author: "Mohammad",
-    tags: null,
+    tags: [],
     price: 120,
     isPublished: true,
   });
