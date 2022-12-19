@@ -12,11 +12,19 @@ mongoose
   });
 
 const courseSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, minLength: 5, maxLength: 255, required: true },
+  category: {type: String, enum: ['mobile', 'web', 'network'], required: true},
   author: String,
   tags: [String],
   date: { type: Date, default: new Date() },
-  price: Number,
+  price: {
+    type: Number,
+    required: function () {
+      return this.isPublished;
+    },
+    min: 10,
+    max: 200
+  },
   isPublished: Boolean,
 });
 
@@ -24,16 +32,17 @@ const Course = mongoose.model("course", courseSchema);
 
 const createCourse = async () => {
   const course = new Course({
-    // name: "Vue with Mohammad",
+    name: "ne",
+    category: "mobile",
     author: "Mohammad",
     tags: ["Mohammad", "vue"],
-    price: 120,
+    price: 300,
     isPublished: true,
   });
 
   try {
     // const result = await course.save();
-    await course.validate()
+    await course.validate();
     console.log("result", course);
   } catch (e) {
     console.log(e.message);
