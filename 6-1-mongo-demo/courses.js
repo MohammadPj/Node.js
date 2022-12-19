@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+mongoose.set("strictQuery", false);
+
 mongoose
   .connect("mongodb://localhost:27017/exercise")
   .then(() => {
@@ -10,7 +12,7 @@ mongoose
   });
 
 const courseSchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, required: true },
   author: String,
   tags: [String],
   date: { type: Date, default: new Date() },
@@ -22,15 +24,20 @@ const Course = mongoose.model("course", courseSchema);
 
 const createCourse = async () => {
   const course = new Course({
-    name: "Vue with Mohammad",
+    // name: "Vue with Mohammad",
     author: "Mohammad",
     tags: ["Mohammad", "vue"],
     price: 120,
     isPublished: true,
   });
 
-  const result = await course.save();
-  console.log("result", course);
+  try {
+    // const result = await course.save();
+    await course.validate()
+    console.log("result", course);
+  } catch (e) {
+    console.log(e.message);
+  }
 };
 
 const getCourses = async () => {
@@ -49,25 +56,27 @@ const updateCourse = async (id) => {
   //  Update directly
   //  Optionally: get the updated document
 
-  const course = await Course.findById(id)
-  if(!course) return
+  const course = await Course.findById(id);
+  if (!course) return;
 
   // course.isPublished = true
   // course.author = 'Another Author'
 
   course.set({
     isPublished: true,
-    author: 'Mohammad'
-  })
+    author: "Mohammad",
+  });
 
-  const result = await course.save()
-  console.log(result)
+  const result = await course.save();
+  console.log(result);
 };
 
 const run = async () => {
   const courses = await getCourses();
   console.log("courses", courses);
 };
+createCourse();
+
 // run();
 
-updateCourse("5a68fdc3615eda645bc6bdec")
+// updateCourse("5a68fdc3615eda645bc6bdec")
