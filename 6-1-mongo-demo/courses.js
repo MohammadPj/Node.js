@@ -40,28 +40,26 @@ const getCourses = async () => {
 };
 
 const updateCourse = async (id) => {
-  //  Approach: Query first
-  //  find by id
-  //  Modify its properties
-  //  save
-
   //  Approach: Update first
   //  Update directly
   //  Optionally: get the updated document
+  //  use when we haven't any validation
 
-  const course = await Course.findById(id)
-  if(!course) return
 
-  // course.isPublished = true
-  // course.author = 'Another Author'
+  // const result = await Course.update({_id: id}, {
+  //   $set: {author: "Mosh"}
+  // })
 
-  course.set({
-    isPublished: true,
-    author: 'Mohammad'
-  })
+  const course = await Course.findByIdAndUpdate(
+    id,
+    {
+      $set: { author: "Mosh" },
+    },
+    // to give new result
+    { new: true }
+  );
 
-  const result = await course.save()
-  console.log(result)
+  console.log("course", course);
 };
 
 const run = async () => {
@@ -70,4 +68,4 @@ const run = async () => {
 };
 // run();
 
-updateCourse("639dd47d2515456f93ab2885")
+updateCourse("639dd47d2515456f93ab2885");
