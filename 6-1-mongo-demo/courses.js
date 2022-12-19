@@ -42,11 +42,11 @@ const Course = mongoose.model("course", courseSchema);
 
 const createCourse = async () => {
   const course = new Course({
-    name: "course 3",
+    name: "aa",
     category: "mobile",
     author: "Mohammad",
     tags: [],
-    price: 120,
+    price: 320,
     isPublished: true,
   });
 
@@ -55,7 +55,9 @@ const createCourse = async () => {
     await course.validate();
     console.log("result", course);
   } catch (e) {
-    console.log(e.message);
+    for(field in e.errors) {
+      console.log("error", e.errors[field].message)
+    }
   }
 };
 
