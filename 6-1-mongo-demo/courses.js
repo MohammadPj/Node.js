@@ -17,12 +17,16 @@ const courseSchema = new mongoose.Schema({
     type: String,
     enum: ["mobile", "web", "network"],
     required: true,
+    // convert to lowercase
+    lowercase: true,
+    // uppercase: true
+    trim: true
   },
   author: String,
   tags: {
     type: Array,
     validate: {
-      validator: () => Promise.resolve(false),
+      validator: (v) => v && v.length > 1,
       message: "A course should have at least one tag",
     },
   },
@@ -34,6 +38,8 @@ const courseSchema = new mongoose.Schema({
     },
     min: 10,
     max: 200,
+    get: v => Math.round(v),
+    set: v => Math.round(v)
   },
   isPublished: Boolean,
 });
@@ -42,17 +48,17 @@ const Course = mongoose.model("course", courseSchema);
 
 const createCourse = async () => {
   const course = new Course({
-    name: "aa",
-    category: "mobile",
+    name: "course new 2",
+    category: "Web",
     author: "Mohammad",
-    tags: [],
-    price: 320,
+    tags: ["web", "learn"],
+    price: 15.123,
     isPublished: true,
   });
 
   try {
     // const result = await course.save();
-    await course.validate();
+    await course.save();
     console.log("result", course);
   } catch (e) {
     for(field in e.errors) {
@@ -62,9 +68,7 @@ const createCourse = async () => {
 };
 
 const getCourses = async () => {
-  return Course.find({ isPublished: true })
-    .or([{ name: /.*by.*/ }, { price: { $gte: 15 } }])
-    .select("name author price");
+  return Course.findById("63a0d15d109c3599d2c535d4")
 };
 
 const updateCourse = async (id) => {
@@ -96,8 +100,8 @@ const run = async () => {
   const courses = await getCourses();
   console.log("courses", courses);
 };
-createCourse();
+// createCourse();
 
-// run();
+run();
 
 // updateCourse("5a68fdc3615eda645bc6bdec")
