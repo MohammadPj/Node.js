@@ -1,19 +1,12 @@
 const express = require('express')
 const Joi = require("joi");
-const router = express.Router()
 const mongoose = require("mongoose")
 
-mongoose.connect("mongodb://localhost:27017/genres").then(() => {
-  console.log("connected to courses")
-}).catch(() => {
-  console.log("not connected")
-})
+const router = express.Router()
 
-const genreSchema = new mongoose.Schema({
+const Genre = mongoose.model("Genre", new mongoose.Schema({
   name: {type: String, minLength: 3, maxLength: 25}
-})
-
-const Genre = mongoose.model("genre", genreSchema)
+}))
 
 const validateGenre = (genre) => {
   const schema = Joi.object({
