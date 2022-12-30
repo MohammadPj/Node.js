@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Mosh Node.js.iml" filepath="$PROJECT_DIR$/.idea/Mosh Node.js.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Mosh.iml" filepath="$PROJECT_DIR$/.idea/Mosh.iml" />
     </modules>
   </component>
 </project>
