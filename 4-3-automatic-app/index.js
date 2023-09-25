@@ -12,7 +12,7 @@ const authentication = require("./middleware/authentication");
 const Creator = require("./utils/creator");
 
 //  routes
-const genres = require("./routes/courses")
+const genres = require("./routes/genres")
 const home = require("./routes/home")
 
 const app = express();

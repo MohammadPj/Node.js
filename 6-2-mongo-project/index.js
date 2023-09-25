@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true })); //key=value&key=value
 app.use(express.static("public"));
 app.use(helmet());
 
-if (app.get("env") === "development") {
+if (app.get("env") === "development") {``
   app.use(morgan("short"));
   startupDebugger("morgan enabled")
 }
