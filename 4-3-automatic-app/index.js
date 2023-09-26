@@ -27,6 +27,9 @@ app.use(express.urlencoded({ extended: true })); //key=value&key=value
 app.use(express.static("public"));
 app.use(helmet());
 
+console.log('password', config.get('hiddenMessage')) // inside hiddenMessage in config is name of env property (my_message)
+console.log('name', config.get('name')) // first name property in config folder
+
 if (app.get("env") === "development") {
   app.use(morgan("short"));
   startupDebugger("morgan enabled")
@@ -39,8 +42,7 @@ app.use(log);
 app.use(authentication);
 
 // --------------------------- APIs
-
-app.use("/api/genres", genres)
+app.use("/api/genres", genres) // any api with (/api/genres) route should use genres router
 app.use("/", home)
 
 const port = process.env.PORT || 3000;
