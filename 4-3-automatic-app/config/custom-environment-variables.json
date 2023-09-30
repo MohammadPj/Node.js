@@ -1,5 +1,6 @@
 {
   "mail": {
     "password": "auto_app_password"
-  }
+  },
+  "hiddenMessage": "my_message"
 }

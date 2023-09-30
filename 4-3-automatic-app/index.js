@@ -27,6 +27,9 @@ app.use(express.urlencoded({ extended: true })); //key=value&key=value
 app.use(express.static("public")); // serve static files in public folder
 app.use(helmet()); // secure application by set varios header in request
 
+console.log('password', config.get('hiddenMessage')) // inside hiddenMessage in config is name of env property (my_message)
+console.log('name', config.get('name')) // first name property in config folder
+
 // -------------------------------------------- Custom middlewares --------------------------------
 app.use(logger);
 app.use(authentication);
@@ -43,7 +46,7 @@ console.log('Application Name: ' + config.get('name'));
 console.log('Mail Server: ' + config.get('mail'));
 
 // --------------------------- APIs
-app.use("/api/genres", genres)
+app.use("/api/genres", genres) // any api with (/api/genres) route should use genres router
 app.use("/", home)
 
 const port = process.env.PORT || 4000;
