@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const startupDebugger = require("debug")("app:startup") // to modularize and beautify debug
 const dbDebugger = require("debug")("app:db")
 
+const app = express();
 // --------------------------------------------  Middlewares --------------------------------
 const logger = require("./middleware/logger");
 const authentication = require("./middleware/authentication");
@@ -15,7 +16,6 @@ const Creator = require("./utils/creator");
 const genres = require("./routes/genres")
 const home = require("./routes/home")
 
-const app = express();
 
 // -------------------------------------------- Pug --------------------------------
 app.set('view engine', 'pug')
@@ -45,7 +45,7 @@ dbDebugger("connected to database...")
 console.log('Application Name: ' + config.get('name'));
 console.log('Mail Server: ' + config.get('mail'));
 
-// --------------------------- APIs
+// -------------------------------------------- APIs  --------------------------------
 app.use("/api/genres", genres) // any api with (/api/genres) route should use genres router
 app.use("/", home)
 

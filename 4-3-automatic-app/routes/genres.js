@@ -1,8 +1,8 @@
 const Creator = require("../utils/creator");
 
-const express = require('express')
+const express = require("express");
 const Joi = require("joi");
-const router = express.Router('')
+const router = express.Router("");
 
 const genres = [
   { id: 1, genre: "horror" },
@@ -12,7 +12,7 @@ const genres = [
 
 const validateGenre = (genre) => {
   const schema = Joi.object({
-    genre: Joi.string().required().min(3),
+    name: Joi.string().required().min(3),
   });
   return schema.validate(genre);
 };
