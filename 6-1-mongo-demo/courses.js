@@ -16,12 +16,20 @@ const courseSchema = new mongoose.Schema({
     type: String,
     enum: ["mobile", "web", "network"],
     required: true,
-    // convert to lowercase
-    lowercase: true,
-    // uppercase: true
-    trim: true
+    lowercase: true, // convert to lowercase
+    trim: true, // uppercase: true
   },
-  author: String,
+  author: {
+    type: String,
+    validate: {
+      validator: async function (v) { // Async validator
+        const count = await Course.find({}).count() // get data from database and make some condition
+        console.log('count', count);
+        return count > 10
+      },
+      message: 'author is not valid because course count is less than 10'
+    }
+  },
   tags: {
     type: Array,
     validate: {
@@ -37,8 +45,8 @@ const courseSchema = new mongoose.Schema({
     },
     min: 10,
     max: 200,
-    get: v => Math.round(v),
-    set: v => Math.round(v)
+    get: (v) => Math.round(v), // modify value in get value 
+    set: (v) => Math.round(v), // modify value in set value
   },
   isPublished: Boolean,
 });
@@ -50,7 +58,7 @@ const createCourse = async () => {
     name: "course new 2",
     category: "Web",
     author: "Mohammad",
-    tags: ["web", "learn"],
+    tags: [""],
     price: 15.123,
     isPublished: true,
   });
@@ -60,14 +68,15 @@ const createCourse = async () => {
     await course.save();
     console.log("result", course);
   } catch (e) {
-    for(field in e.errors) {
-      console.log("error", e.errors[field].message)
+    console.log('error => ',e);
+    for (field in e.errors) { // show all errors of database validation
+      console.log("error", e.errors[field].message);
     }
   }
 };
 
 const getCourses = async () => {
-  return Course.findById("63a0d15d109c3599d2c535d4")
+  return Course.findById("63a0d15d109c3599d2c535d4");
 };
 
 const updateCourse = async (id) => {
@@ -96,7 +105,7 @@ const updateCourse = async (id) => {
 };
 
 const run = async () => {
-  const courses = await getCourses();
+  const courses = await createCourse();
   console.log("courses", courses);
 };
 // createCourse();

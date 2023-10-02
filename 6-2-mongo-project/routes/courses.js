@@ -1,7 +1,7 @@
 const express = require('express')
+const mongoose = require("mongoose")
 const Joi = require("joi");
 const router = express.Router()
-const mongoose = require("mongoose")
 
 mongoose.connect("mongodb://localhost:27017/genres").then(() => {
   console.log("connected to courses")
