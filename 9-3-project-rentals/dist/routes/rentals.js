@@ -12,14 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Movie_1 = require("../models/Movie");
 const Rentals_1 = require("../models/Rentals");
 const Customers_1 = require("../models/Customers");
+const Fawn = require("fawn");
 const mongoose = require("mongoose");
 const express = require("express");
 const Joi = require("joi");
 const router = express.Router();
+Fawn.init("mongodb://127.0.0.1:27017/rental-project");
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const rentals = yield Rentals_1.Rental.find()
-            .sort("-dateOut");
+        const rentals = yield Rentals_1.Rental.find().sort("-dateOut");
         res.send(rentals);
     }
     catch (e) {
@@ -36,17 +37,34 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { error } = (0, Rentals_1.validateRental)(req.body);
     if (error)
         return res.status(400).send(error.details[0].message);
-    const movie = yield Movie_1.Movie.findById(req.body.movieId);
-    const customer = yield Customers_1.Customers.findById(req.body.customerId);
-    console.log("movie", movie);
-    console.log("customer", customer);
     try {
+        const customer = yield Customers_1.Customers.findById(req.body.customerId);
+        if (!customer)
+            return res.status(400).send("invalid customer");
+        console.log('customer', customer);
+        const movie = yield Movie_1.Movie.findById(req.body.movieId);
+        console.log('movie', movie);
+        if (!movie)
+            return res.status(400).send("invalid movie");
+        if (movie.numberInStock === 0)
+            return res.status(400).send("movie not in stock");
         let rental = new Rentals_1.Rental(Object.assign(Object.assign({}, req.body), { movie, customer }));
-        rental = yield rental.save();
-        res.send(rental);
+        try {
+            new Fawn.Task()
+                .save("rentals", rental)
+                .update("movies", { _id: movie._id }, {
+                $inc: { numberInStock: -1 },
+            })
+                .run();
+            res.send(rental);
+        }
+        catch (e) {
+            res.status(500).send("somthing faild");
+        }
     }
     catch (e) {
-        console.log("e", e);
+        res.status(400).send(e.message);
+        console.log("e", e.message);
     }
 }));
 router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

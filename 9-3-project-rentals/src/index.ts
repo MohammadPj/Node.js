@@ -11,7 +11,7 @@ const movies = require("./routes/Movie")
 const customers = require("./routes/Customers")
 const rentals = require("./routes/rentals")
 
-mongoose.connect("mongodb://localhost:27017/project-population").then(() => {
+mongoose.connect("mongodb://127.0.0.1:27017/rental-project").then(() => {
   console.log("connected to courses")
 }).catch(() => {
   console.log("not connected")
@@ -39,7 +39,7 @@ app.use("/api/movies", movies)
 app.use("/api/customers", customers)
 app.use("/api/rentals", rentals)
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 app.listen(port, (socket: any) => {
   console.log(`listening to port ${port}`);
 });

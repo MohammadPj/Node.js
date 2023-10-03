@@ -1,18 +1,18 @@
 import { Movie, validateMovie } from "../models/Movie";
 import { Rental, validateRental } from "../models/Rentals";
 import { Customers } from "../models/Customers";
-
+const Fawn = require("fawn");
 const mongoose = require("mongoose");
 const express = require("express");
 const Joi = require("joi");
 
 const router = express.Router();
 
+Fawn.init("mongodb://127.0.0.1:27017/rental-project");
 // ----------------------------------  Get  --------------------------------------
 router.get("/", async (req: any, res: any) => {
   try {
-    const rentals = await Rental.find()
-      .sort("-dateOut")
+    const rentals = await Rental.find().sort("-dateOut");
 
     res.send(rentals);
   } catch (e) {
@@ -32,19 +32,48 @@ router.get("/:id", async (req: any, res: any) => {
 router.post("/", async (req: any, res: any) => {
   const { error } = validateRental(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-  const movie = await Movie.findById(req.body.movieId);
-  const customer = await Customers.findById(req.body.customerId);
-
-  console.log("movie", movie)
-  console.log("customer", customer)
 
   try {
-    let rental = new Rental({ ...req.body, movie, customer });
-    rental = await rental.save();
+    const customer = await Customers.findById(req.body.customerId);
+    if (!customer) return res.status(400).send("invalid customer");
+  console.log('customer', customer)
 
-    res.send(rental);
-  } catch (e) {
-    console.log("e", e)
+    const movie: any = await Movie.findById(req.body.movieId);
+    console.log('movie', movie)
+    if (!movie) return res.status(400).send("invalid movie");
+
+    if (movie.numberInStock === 0)
+      return res.status(400).send("movie not in stock");
+
+    let rental = new Rental({ ...req.body, movie, customer });
+
+    // rent a movie and decrease numberInStock should run or fail together
+    // for that we should use transaction but mongo have two-phase commit instead
+    // we use Fawn library for simulating transaction in here , use 2 phase inside
+    // rental = await rental.save();
+    // movie.numberInStock--;
+    // await movie.save();
+
+    try {
+      //
+      new Fawn.Task()
+        .save("rentals", rental) // save rental directly to rentals collection in mongo
+        .update( // decrease numberInStock movie
+          "movies",
+          { _id: movie._id },
+          {
+            $inc: { numberInStock: -1 },
+          }
+        )
+        .run(); // run actions together
+
+      res.send(rental);
+    } catch (e) {
+      res.status(500).send("somthing faild");
+    }
+  } catch (e: any) {
+    res.status(400).send(e.message)
+    console.log("e", e.message);
   }
 });
 
