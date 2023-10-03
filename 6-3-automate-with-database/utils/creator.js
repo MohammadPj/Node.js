@@ -7,21 +7,23 @@ class Creator {
   run = (validator) => {
     // -----------------------------------------  Get ------------------------------------------------
     this.app.get(`/`, async (req, res) => {
-      const collection = await this.Model.find();
-      res.send(collection);
+      try {
+        const collection = await this.Model.find();
+        res.send(collection);
+      } catch (e) {
+        res.status(500).send(e.message);
+      }
     });
 
     this.app.get(`/:id`, async (req, res) => {
-      const id = req.params.id
+      const id = req.params.id;
 
-      const document = await this.Model.findById(id);
-
-      if (!document)
-        return res
-          .status(404)
-          .send(`The item with the given ID was not found!!! `);
-
-      res.send(document);
+      try {
+        const document = await this.Model.findById(id);
+        res.send(document);
+      } catch (e) {
+        res.status(404).send(`The item with the given ID was not found!!! `);
+      }
     });
 
     // -----------------------------------------  Post ------------------------------------------------
@@ -34,12 +36,15 @@ class Creator {
         if (error) return res.status(400).send(error.details[0].message);
       }
 
-      //  Create new deocument in Model database
+      //  Create new document in Model database
       const document = new this.Model(body);
-      await document.save();
 
-      // return document in response
-      res.send(document);
+      try {
+        await document.save();
+        res.send(document);
+      } catch (e) {
+        res.status(500).send(e.message);
+      }
     });
 
     // -----------------------------------------  Put ------------------------------------------------
@@ -48,25 +53,27 @@ class Creator {
       const { error } = validator(req.body);
       if (error) return res.status(400).send(error.details[0].message);
 
-      const document = await this.Model.findByIdAndUpdate(
-        req.params.id,
-        { ...req.body },
-        { new: true }
-      );
-      // const genre = await Genre.findById(req.params.id)
-      if (!document) return res.status(404).send("Genre not found");
+      try {
+        const document = await this.Model.findByIdAndUpdate(
+          req.params.id,
+          { ...req.body },
+          { new: true }
+        );
 
-      const result = await document.save();
-      res.send(result);
+        res.send(document);
+      } catch (e) {
+        res.status(500).send(e.message);
+      }
     });
 
     // -----------------------------------------  Delete ------------------------------------------------
     this.app.delete(`/:id`, async (req, res) => {
-      const genre = await this.Model.findByIdAndRemove(req.params.id);
-
-      if (!genre) return res.status(404).send("Genre not found");
-
-      res.send(genre);
+      try {
+        const genre = await this.Model.findByIdAndRemove(req.params.id);
+        res.send(genre);
+      } catch (e) {
+        res.status(500).send(e.message);
+      }
     });
   };
 }

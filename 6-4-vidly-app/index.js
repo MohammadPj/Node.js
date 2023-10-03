@@ -1,6 +1,4 @@
 const express = require("express");
-const config = require("config"); // define config settings in config folder
-const Joi = require("joi"); // validation
 const helmet = require("helmet"); // security
 const morgan = require("morgan"); // log in every request
 const mongoose = require("mongoose")
@@ -9,7 +7,7 @@ const app = new express();
 
 // --------------------------------------------  Database --------------------------------
 mongoose
-  .connect("mongodb://localhost:27017/test-project")
+  .connect("mongodb://127.0.0.1:27017/vidly")
   .then(() => {
     console.log("connected to test-project");
   })
@@ -19,6 +17,7 @@ mongoose
 
 // --------------------------------------------  Routes --------------------------------
 const genres = require("./routes/genres");
+const customers = require("./routes/customers");
 
 // --------------------------------------------  Third-party middleware --------------------------------
 app.use(express.json()); // parse req.body from json to object
@@ -33,6 +32,7 @@ if (app.get("env") === "development") {
 
 // -------------------------------------------- APIs  --------------------------------
 app.use("/api/genres", genres); // any api with (/api/genres) route should use genres router
+app.use("/api/customers", customers); // any api with (/api/genres) route should use genres router
 
 const port = process.env.PORT || 4000; // get port from environment or set it to 4000
 app.listen(port, (socket) => {
