@@ -26,6 +26,12 @@ const app = express();
 
 process.on("uncaughtException", (ex) => {
   winston.error(ex.message, ex)
+  process.exit(1)
+})
+
+process.on("unhandledRejection", (ex: any) => {
+  winston.error(ex.message, ex)
+  process.exit(1)
 })
 
 
