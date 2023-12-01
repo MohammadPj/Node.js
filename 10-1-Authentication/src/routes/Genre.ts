@@ -1,5 +1,6 @@
 let express = require('express')
 const auth = require("../middleware/authorization")
+const admin = require("../middleware/admin")
 import { Genre, validateGenre } from "../models/Genre"
 
 const router = express.Router()
@@ -19,7 +20,7 @@ router.get("/:id", async (req: any, res: any) => {
 });
 
 // ----------------------------------  Post  --------------------------------------
-router.post("/", auth,  async (req: any, res: any) => {
+router.post("/", [auth, admin],  async (req: any, res: any) => {
 
   const { value, error } = validateGenre(req.body);
 

@@ -13,15 +13,16 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
   password: { type: String, required: true, minLength: 3, maxLength: 1024 }, // use npm joi-password-complexity,
+  isAdmin: Boolean,
 });
 
 userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
-    { _id: this._id }, // payload of jwt
+    { _id: this._id, isAdmin: this.isAdmin }, // payload of jwt
     config.get("jwtPrivateKey") // private key
   );
 
-  return token
+  return token;
 };
 
 const User = mongoose.model("User", userSchema);
