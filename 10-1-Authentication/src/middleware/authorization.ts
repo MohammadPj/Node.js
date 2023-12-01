@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 const config = require("config");
 
-const authentication = (req: any, res: any, next: any) => {
+const authorization = (req: any, res: any, next: any) => {
   console.log("Authenticating ...");
 
-  const token = req.headers("x-auth-token");
+  const token = req.header("x-auth-token");
   if (!token) return res.status(401).send("Access denied, no token provided");
 
   try {
@@ -16,4 +16,4 @@ const authentication = (req: any, res: any, next: any) => {
   }
 };
 
-module.exports = authentication;
+module.exports = authorization;

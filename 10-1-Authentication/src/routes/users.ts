@@ -17,7 +17,7 @@ router.post("/", async (req: any, res: any) => {
   user = new User(lodash.pick(req.body, ["email", "name", "password"]));
 
   const salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(user.password, salt);
+  user.password = await bcrypt.hash(user.password, salt); // hash password to save in database safely
 
   await user.save();
 
