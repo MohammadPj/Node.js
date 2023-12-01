@@ -1,5 +1,6 @@
+// require('express-async-errors') // work instead of asyncMiddleware
+import express from "express"
 const config = require('config')
-const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const morgan = require("morgan");
@@ -13,6 +14,9 @@ const customers = require("./routes/Customers")
 const rentals = require("./routes/rentals")
 const users = require("./routes/users")
 const auth = require("./routes/auth")
+
+// middleware
+const error = require("./middleware/error")
 
 mongoose.connect("mongodb://127.0.0.1:27017/rental-project").then(() => {
   console.log("connected to courses")
@@ -49,8 +53,10 @@ app.use("/api/rentals", rentals)
 app.use("/api/users", users)
 app.use("/api/auth", auth)
 
+app.use(error)
+
 const port = process.env.PORT || 4000;
-app.listen(port, (socket: any) => {
+app.listen(port, () => {
   console.log(`listening to port ${port}`);
 });
 
