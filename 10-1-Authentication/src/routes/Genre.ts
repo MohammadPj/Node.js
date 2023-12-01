@@ -19,6 +19,7 @@ router.get("/:id", async (req: any, res: any) => {
 
 // ----------------------------------  Post  --------------------------------------
 router.post("/", async (req: any, res: any) => {
+
   const { value, error } = validateGenre(req.body);
 
   if (error) return res.status(400).send(error.details[0].message);
