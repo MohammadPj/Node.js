@@ -1,7 +1,7 @@
 require("express-async-errors"); // work instead of asyncMiddleware
 import express from "express";
-import winston from "winston";
-import "winston-mongodb";
+import winston from "winston"; // to log errors in .log files and save theme
+import "winston-mongodb"; // to save errors and logs in mongodb
 
 const config = require("config");
 const mongoose = require("mongoose");
@@ -23,6 +23,13 @@ const error = require("./middleware/error");
 
 const app = express();
 
+
+process.on("uncaughtException", (ex) => {
+  winston.error(ex.message, ex)
+})
+
+
+// define winston
 winston.add(new winston.transports.File({ filename: "logfile.log" }));
 winston.add(
   new winston.transports.MongoDB({
