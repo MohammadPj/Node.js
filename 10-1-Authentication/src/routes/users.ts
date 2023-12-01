@@ -1,5 +1,5 @@
-let express = require("express");
 import { User, validateUser } from "../models/User";
+let express = require("express");
 const lodash = require("lodash");
 const bcrypt = require("bcrypt");
 
@@ -21,7 +21,10 @@ router.post("/", async (req: any, res: any) => {
 
   await user.save();
 
-  res.send(lodash.pick(user, ["name", "email"]));
+  // @ts-ignore
+  const token = user.generateAuthToken()
+
+  res.header('x-auth-token', token).send(lodash.pick(user, ["name", "email"]));
 });
 
 module.exports = router;

@@ -1,3 +1,4 @@
+const config = require('config')
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
@@ -20,6 +21,11 @@ mongoose.connect("mongodb://127.0.0.1:27017/rental-project").then(() => {
 })
 
 const app = express();
+
+if(!config.get('jwtPrivateKey')) {
+  console.error('FATAL ERROR: jwtPrivateKey is not defined')
+  process.exit(1)
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //key=value&key=value
