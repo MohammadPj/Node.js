@@ -1,4 +1,4 @@
-// require('express-async-errors') // work instead of asyncMiddleware
+require('express-async-errors') // work instead of asyncMiddleware
 import express from "express"
 const config = require('config')
 const mongoose = require("mongoose");

@@ -2,26 +2,22 @@ import express from "express";
 const auth = require("../middleware/authorization");
 const admin = require("../middleware/admin");
 import { Genre, validateGenre } from "../models/Genre";
-import {asyncMiddleware} from "../middleware/async";
 
 const router = express.Router();
 
 // ----------------------------------  Get  --------------------------------------
-router.get(
-  "/",
-  asyncMiddleware(async (req, res) => {
-    const genres = await Genre.find({});
-    res.send(genres);
-  })
-);
+router.get("/", async (req, res) => {
+  const genres = await Genre.find({});
+  res.send(genres);
+});
 
-router.get("/:id", asyncMiddleware(async (req, res) => {
+router.get("/:id", async (req, res) => {
   const genre = await Genre.findById(req.params.id);
 
   if (!genre) return res.status(404).send("genre not found");
 
   res.send(genre);
-}));
+});
 
 // ----------------------------------  Post  --------------------------------------
 router.post("/", [auth, admin], async (req: any, res: any) => {
