@@ -2,6 +2,7 @@ import Joi from "joi";
 import { User } from "../models/User";
 let express = require("express");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken')
 
 const router = express.Router();
 
@@ -31,7 +32,12 @@ router.post("/", async (req: any, res: any) => {
   if (!isValidPassword)
     return res.status(400).send("invalid email or password");
 
-  res.send(true)
+  const token = jwt.sign(
+    {_id: user._id}, // payload of jwt
+    'JWTPrivateKey' // private key
+  )
+
+  res.send(token)
 });
 
 module.exports = router;
