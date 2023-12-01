@@ -52,6 +52,9 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             console.log('before');
             task
                 .save("rentals", rental)
+                .update("movies", { _id: movie._id }, {
+                $inc: { numberInStock: -1 },
+            })
                 .run();
             console.log('after');
             res.send(rental);
